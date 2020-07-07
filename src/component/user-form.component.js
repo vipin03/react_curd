@@ -2,21 +2,19 @@ import React, { Component } from "react";
 import axios from 'axios';
 export default class UserForm extends Component {
     constructor(props) {
-        super(props)
-
+        super(props);
         this.state = {
             name: '',
             email: ''
         }
     }
 
-
     onSubmitt = e => {
         e.preventDefault();
-        console.log(this.state);
         var bodyFormData = new FormData();
         bodyFormData.set('name', this.state.name);
         bodyFormData.set('email', this.state.email);
+        var self = this;
         axios({
             method: 'post',
             withCredentials: false,
@@ -26,26 +24,20 @@ export default class UserForm extends Component {
           }).then(function (response) {
             if(response.data.stat){
                 document.getElementById("form").reset();
-                console.log(document.getElementById("check").value);
+                self.props.getPlayerData();
             }
-
-
           });
-          
     };
     
     formValChange = e => {
         e.preventDefault();
         const { name, value } = e.target;
-        let isError = { ...this.state.isError };
-
         this.setState({
             [name]: value
         })
     };
 
     render() {
-
         return (
             <form id='form' onSubmit={this.onSubmitt} noValidate>
             <div className="form-group">
@@ -57,7 +49,6 @@ export default class UserForm extends Component {
                 onChange={this.formValChange}
                 />
             </div>
-
             <div className="form-group">
                 <label>Email</label>
                 <input
@@ -67,7 +58,6 @@ export default class UserForm extends Component {
                 onChange={this.formValChange}
                 />
             </div>
-
             <button type="submit" className="btn btn-block btn-danger">Enter Details</button>
             </form>
         );
